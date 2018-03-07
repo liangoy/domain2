@@ -52,3 +52,4 @@ def is_registered(domains):
 if __name__ == '__main__':
     print(get_headers())
     print(is_registered(['10.com', '20.com','liangoy1.com','liangoy.com']))
+    print(requests.get('http://dms.10.com/api/v1/agent/domain/check?keyword=10.com', headers=get_headers()).text)
