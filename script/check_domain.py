@@ -4,7 +4,7 @@ from utils.agent import is_registered
 if __name__ == '__main__':
     while True:
         try:
-            domains = [i['domain'] for i in DB.digit6.find({'status': ''}).limit(100)]
+            domains = [i['domain'] for i in DB.digit6.find({'status': ''}).limit(128)]
             output = is_registered(domains)
             for i in output:
                 DB.digit6.update_one({'domain': i['domain']}, {'$set': {'status': i['status']}})
