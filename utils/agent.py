@@ -63,10 +63,10 @@ def register_domain(domains):
             continue
         try:
             ot = json.loads(i[1].text)
-            if ot['register_status'] == 'SUCCESSFUL':
-                dic[i[0]] = 1
-            else:
+            if ot['register_status'] != 'FAILED':
                 dic[i[0]] = 0
+            else:
+                dic[i[0]] = 1
         except Exception as e:
             dic[i[0]] = -1
             print(e,i[1].text)
@@ -75,6 +75,9 @@ def register_domain(domains):
 
 if __name__ == '__main__':
     s = time.time()
-    print(register_domain(['10.com','20.com','037498.com','30.com','40.com']))
+    #print(register_domain(['037478.com']))
     e = time.time()
     print(e - s)
+    print(requests.post(
+        'http://dms.10.com/api/v1/agent/domain/register?period=1&contact_template_id=2011300215&keyword=035843.com',
+        headers=get_headers()).json())
