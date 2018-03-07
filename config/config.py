@@ -1,7 +1,7 @@
 '''
 数据库
 '''
-DB_LOGIN_STRING = ''
+DB_LOGIN_STRING = 'mongodb://sqsm:sqsm1234@47.91.253.29/admin'
 
 
 '''
