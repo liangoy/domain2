@@ -46,10 +46,35 @@ def is_registered(domains):
                     dic[k[0]] = -1
             else:
                 dic[k[0]] = -1
-    return [{'domain':i,'status':dic[i]} for i in dic]
+    return [{'domain': i, 'status': dic[i]} for i in dic]
+
+
+def register_domain(domains):
+    # 注册域名
+    # 输入域名组成的列表，由于代理商服务器的关系，域名数量最好不要超过128
+    # 输出的status中1代表注册成功,0代表失败，-1代表程序错误
+    tasks = [grequests.post(
+        'http://dms.10.com/api/v1/agent/domain/register?period=1&contact_template_id=2011300215&keyword=' + i,
+        headers=get_headers()) for i in domains]
+    output = zip(domains, grequests.map(tasks))
+    dic = {}
+    for i in output:
+        if i[1]==None:
+            continue
+        try:
+            ot = json.loads(i[1].text)
+            if ot['register_status'] == 'SUCCESSFUL':
+                dic[i[0]] = 1
+            else:
+                dic[i[0]] = 0
+        except Exception as e:
+            dic[i[0]] = -1
+            print(e,i[1].text)
+    return [{'domain': i, 'status': dic[i]} for i in dic]
 
 
 if __name__ == '__main__':
-    print(get_headers())
-    print(is_registered(['10.com', '20.com','liangoy1.com','liangoy.com']))
-    print(requests.get('http://dms.10.com/api/v1/agent/domain/check?keyword=10.com', headers=get_headers()).text)
+    s = time.time()
+    print(register_domain(['10.com','20.com','037498.com','30.com','40.com']))
+    e = time.time()
+    print(e - s)
