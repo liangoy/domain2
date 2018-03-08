@@ -74,10 +74,4 @@ def register_domain(domains):
 
 
 if __name__ == '__main__':
-    s = time.time()
-    #print(register_domain(['037478.com']))
-    e = time.time()
-    print(e - s)
-    print(requests.post(
-        'http://dms.10.com/api/v1/agent/domain/register?period=1&contact_template_id=2011300215&keyword=035843.com',
-        headers=get_headers()).json())
+    print(is_registered(['10.com']))

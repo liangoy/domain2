@@ -4,7 +4,7 @@ from utils.agent import register_domain
 if __name__ == '__main__':
     while True:
         try:
-            domains = [i['domain'] for i in DB.digit6.find({'status': 0, 'is_ours': ''}).limit(1)]
+            domains = [i['domain'] for i in DB.digit6.find({'status': 0, 'is_ours': ''}).limit(64)]
             output = register_domain(domains)
             for i in output:
                 if i['status'] == 0:
