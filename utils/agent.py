@@ -59,19 +59,60 @@ def register_domain(domains):
     output = zip(domains, grequests.map(tasks))
     dic = {}
     for i in output:
-        if i[1]==None:
+        if i[1] == None:
             continue
         try:
+            i[1].close()
             ot = json.loads(i[1].text)
-            if ot['register_status'] != 'FAILED':
+            if ot['register_status'] == 'SUCCESSFUL':
+                dic[i[0]] = 1
+            elif ot['register_status'] == 'FAILED':
                 dic[i[0]] = 0
             else:
-                dic[i[0]] = 1
+                dic[i[0]] = -1
         except Exception as e:
             dic[i[0]] = -1
-            print(e,i[1].text)
+            print(e, i[1].text)
+    return [{'domain': i, 'status': dic[i]} for i in dic]
+
+
+def register_domain2(domains):
+    # 注册域名
+    # 输入域名组成的列表，由于代理商服务器的关系，域名数量最好不要超过128
+    # 输出的status中1代表注册成功,0代表失败，-1代表一般程序错误，-2代表requests.exceptions.ConnectionError
+    dic = {}
+    for j in domains:
+        try:
+            out_put = requests.post(
+                'http://dms.10.com/api/v1/agent/domain/register?period=1&contact_template_id=2011300215&keyword=' + j,
+                headers=get_headers())
+            i = (j, out_put)
+            i[1].close()
+            ot = json.loads(i[1].text)
+            if ot['register_status'] == 'SUCCESSFUL':
+                dic[i[0]] = 1
+            elif ot['register_status'] == 'FAILED':
+                dic[i[0]] = 0
+            else:
+                dic[i[0]] = -1
+
+        # 如果返回链接断开，则提前返回，因为api接口不稳定所以采用的权宜之计
+        except requests.exceptions.ConnectionError:
+            dic[i[0]] = -2
+            break
+
+        except Exception as e:
+            dic[i[0]] = -1
+            print(e, i[1].text)
     return [{'domain': i, 'status': dic[i]} for i in dic]
 
 
 if __name__ == '__main__':
-    print(is_registered(['10.com']))
+    # print(is_registered(['10.com', '001472.com']))
+    # print(register_domain2(['10.com']))
+    # print(get_headers())
+    # print(register_domain2(['014421.com']))
+    # print(register_domain2(['310750.com']))
+    print(requests.post(
+        'http://dms.10.com/api/v1/agent/domain/register?period=1&contact_template_id=2011300215&keyword=014421.com',
+        headers=get_headers()).json())
