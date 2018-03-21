@@ -4,13 +4,13 @@ if __name__=='__main__':
 
 from database.mongodb import DB
 import time
-from utils.agent import register_domain2
+from utils.agent import register_domain
 
 if __name__ == '__main__':
     while True:
         try:
             domains = [i['domain'] for i in DB.digit6.find({'status': 0, 'is_ours': 0}).sort('error').limit(10)]
-            output = register_domain2(domains)
+            output = register_domain(domains)
             print(output)
             for i in output:
                 if i['status'] == 0:
