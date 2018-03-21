@@ -1,3 +1,7 @@
+if __name__=='__main__':
+    import sys
+    print(sys.path.append('../'))
+
 from database.mongodb import DB
 import time
 from utils.agent import register_domain2
