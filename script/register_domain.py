@@ -1,5 +1,6 @@
-if __name__=='__main__':
+if __name__ == '__main__':
     import sys
+
     print(sys.path.append('../'))
 
 from database.mongodb import DB
@@ -17,8 +18,10 @@ if __name__ == '__main__':
                     DB.digit6.update_one({'domain': i['domain']}, {'$set': {'status': 1}})
                 if i['status'] == 1:
                     DB.digit6.update_one({'domain': i['domain']}, {'$set': {'status': 1, 'is_ours': 1}})
-                if i['status'] < 0:
+                if i['status'] == -1:
                     DB.digit6.update_one({'domain': i['domain']}, {'$set': {'error': int(time.time())}})
+                if i['status'] == -2:
+                    DB.digit6.update_one({'domain': i['domain']}, {'$set': {'error': 2 * int(time.time())}})
 
             a1 = len([i for i in output if i['status'] == 1])
             a0 = len([i for i in output if i['status'] == 0])
